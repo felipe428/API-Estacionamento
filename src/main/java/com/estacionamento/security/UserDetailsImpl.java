@@ -17,6 +17,10 @@ public class UserDetailsImpl implements UserDetails {
 	private String senha;
 	private Collection<? extends GrantedAuthority> authorities;
 
+	public boolean hasRole(TipoPerfil perfil) {
+		return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+	}
+
 	public UserDetailsImpl() {
 	}
 
@@ -29,7 +33,9 @@ public class UserDetailsImpl implements UserDetails {
 				.collect(Collectors.toList());
 	}
 
-	public Long getId() { return id; }
+	public Long getId() {
+		return id;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

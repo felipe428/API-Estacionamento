@@ -3,6 +3,7 @@ package com.estacionamento.security;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,16 +16,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.estacionamento.model.Usuario;
 import com.estacionamento.model.dto.CredenciaisDTO;
+import com.estacionamento.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private AuthenticationManager authenticationManager;
 	private JWTUtil jwtUtil;
+	private UsuarioRepository cliRepo;
 
-	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil,
+			UsuarioRepository cliRepo) {
 		this.authenticationManager = authenticationManager;
 		this.jwtUtil = jwtUtil;
+		this.cliRepo = cliRepo;
 	}
 
 	@Override
@@ -48,8 +54,18 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String token = jwtUtil.generateToken(username);
 		response.addHeader("Authentication", "Bearer " + token);
 		response.addHeader("access-control-expose-headers", "Authorization");
+		Usuario cli = cliRepo.findByLogin(username);
+		response.getWriter().append(jsonAuth(token, cli));
 	}
 
+	private String jsonAuth(String token, Usuario cliente) {
+		 return "{\"token\": \"" + token + "\"" + ", " +
+		 "\"username\": \"" + cliente.getNome() + ", " +
+		 "\"profile\": " + cliente.getPerfis().stream()
+		 .map(x -> "\"" + x + "\"")
+		.collect(Collectors.toList()) + "}";
+		}
+	
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) throws java.io.IOException, javax.servlet.ServletException {

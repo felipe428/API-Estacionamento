@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,26 +16,33 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.estacionamento.repository.UsuarioRepository;
 import com.estacionamento.security.JWTAuthenticationFilter;
+import com.estacionamento.security.JWTAuthorizationFilter;
 import com.estacionamento.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	private static final String[] PUBLIC_MATCHERS = { "/carros/**", "/clientes/**", "/estacionamento/**" };
+	private static final String[] PUBLIC_MATCHERS = { "/carros/**", "/clientes/**", "/estacionamento/**", "/usuarios/**" };
 	private static final String[] PUBLIC_MATCHERS_POST = { "/usuarios/**" };
 	@Autowired
 	private JWTUtil jwtUtil;
 	@Autowired
 	private UserDetailsService userDetailsService;
+	@Autowired
+	private UsuarioRepository cliRepo;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil, cliRepo));
 		http.cors().and().csrf().disable();
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS).permitAll()
 				.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll().anyRequest().authenticated();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
+
 	}
 
 	@Bean
