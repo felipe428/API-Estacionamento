@@ -25,8 +25,19 @@ import com.estacionamento.security.JWTUtil;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	private static final String[] PUBLIC_MATCHERS = { "/carros/**", "/clientes/**", "/estacionamento/**", "/usuarios/**" };
-	private static final String[] PUBLIC_MATCHERS_POST = { "/usuarios/**" };
+	private static final String[] PUBLIC_MATCHERS = { "/v3/api-docs/**", "/swagger-ui/**", 
+			"/swagger-ui.html/**", "/documentacao/**", "/carros/**", "/clientes/**", 
+			"/estacionamento/**", "/usuarios/**" };
+	private static final String[] PUBLIC_MATCHERS_POST = { "/v3/api-docs/**", "/swagger-ui/**", 
+			"/swagger-ui.html/**", "/documentacao/**", "/carros/**", "/clientes/**", 
+			"/estacionamento/**", "/usuarios/**" };
+	private static final String[] PUBLIC_MATCHERS_PUT = { "/v3/api-docs/**", "/swagger-ui/**", 
+			"/swagger-ui.html/**", "/documentacao/**", "/carros/**", "/clientes/**", 
+			"/estacionamento/**", "/usuarios/**" };
+	private static final String[] PUBLIC_MATCHERS_DELETE = { "/v3/api-docs/**", "/swagger-ui/**", 
+			"/swagger-ui.html/**", "/documentacao/**", "/carros/**", "/clientes/**", 
+			"/estacionamento/**", "/usuarios/**" };
+	
 	@Autowired
 	private JWTUtil jwtUtil;
 	@Autowired
@@ -39,7 +50,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil, cliRepo));
 		http.cors().and().csrf().disable();
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS).permitAll()
-				.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll().anyRequest().authenticated();
+				.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+				.antMatchers(HttpMethod.PUT, PUBLIC_MATCHERS_PUT).permitAll()
+				.antMatchers(HttpMethod.DELETE, PUBLIC_MATCHERS_DELETE).permitAll()
+				.anyRequest().authenticated();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 
