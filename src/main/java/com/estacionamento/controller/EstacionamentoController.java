@@ -65,10 +65,10 @@ public class EstacionamentoController implements ControllerInterface<Estacioname
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     
-    @PutMapping(value = "/saida")
-    public ResponseEntity<Estacionamento> putSaida(@RequestBody Estacionamento obj) {
-        service.saidaEstacionamento(obj);
-        return ResponseEntity.ok().body(obj);
+    @PutMapping(value = "/saida/{id}")
+    public ResponseEntity<Estacionamento> putSaida(@PathVariable Long id) {
+        service.saidaEstacionamento(id);
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
 }

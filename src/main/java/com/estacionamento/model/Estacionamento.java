@@ -16,16 +16,24 @@ public class Estacionamento extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 	
 	@ManyToOne
-	private Carro carros;
+	private Carro carro;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-	private LocalTime horaEntrada = LocalTime.now();
+	private LocalTime horaEntrada;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
 	private LocalTime horaSaida;
 	
 	private Double preco;
+		
+	
+	public Carro getCarro() {
+		return carro;
+	}
 
+	public void setCarro(Carro carro) {
+		this.carro = carro;
+	}
 	
 	public LocalTime getHoraEntrada() {
 		return horaEntrada;
@@ -49,14 +57,6 @@ public class Estacionamento extends AbstractEntity {
 
 	public void setPreco(Double preco) {
 		this.preco = preco;
-	}
-
-	public Carro getCarros() {
-		return carros;
-	}
-
-	public void setCarros(Carro carros) {
-		this.carros = carros;
 	}
 
 	public Estacionamento() {
