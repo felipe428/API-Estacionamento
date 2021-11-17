@@ -17,7 +17,7 @@ public class SwaggerConfig {
      .description("API desenvolvida para avaliação do 2º bimestre da matéria Desenvolvimento para Servidores II")
      .version("v0.0.1")
      .contact(new Contact()
-     .name("Felipe, Rene, Thais").email("felipe.silva428@fatec.sp.gov.br"))
+     .name("Felipe Silva, Rene Padua, Thais Silva").email("felipe.silva428@fatec.sp.gov.br, rene.padua@fatec.sp.gov.br, thais.silva110@fatec.sp.gov.br"))
      .license(new License()
      .name("Apache 2.0").url("http://springdoc.org/%22")));
      }

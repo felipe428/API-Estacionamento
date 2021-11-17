@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.estacionamento.model.Estacionamento;
 import com.estacionamento.service.EstacionamentoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/estacionamento")
 public class EstacionamentoController implements ControllerInterface<Estacionamento>{
@@ -25,13 +29,25 @@ public class EstacionamentoController implements ControllerInterface<Estacioname
     EstacionamentoService service;
 
     @Override
-    @GetMapping
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Retorna todos os carros estacionados"),
+    		@ApiResponse(responseCode = "404", description = "Não encontrado"),
+    		@ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
+    		})
+    @GetMapping(produces = "application/json")
+    @Operation(summary = "Retorna todos os carros estacionados")
     public ResponseEntity<List<Estacionamento>> getAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @Override
-    @GetMapping("/{id}")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Retorna o carro estacionado por id"),
+    		@ApiResponse(responseCode = "404", description = "Não encontrado"),
+    		@ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
+    		})
+    @GetMapping(value = "/{id}", produces = "application/json")
+    @Operation(summary = "Retorna um carro estacionado por id")
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
         Estacionamento _Estacionamento = service.findById(id);
         if(_Estacionamento != null) {
@@ -41,14 +57,26 @@ public class EstacionamentoController implements ControllerInterface<Estacioname
     }
 
     @Override
-    @PostMapping
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Adiciona um carro no estacionamento"),
+    		@ApiResponse(responseCode = "404", description = "Não encontrado"),
+    		@ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
+    		})
+    @PostMapping(produces = "application/json")
+    @Operation(summary = "Estaciona um carro no estacionamento, e retorna a hora de entrada")
     public ResponseEntity<Estacionamento> post(@RequestBody Estacionamento obj) {
         service.create(obj);
         return ResponseEntity.ok(obj);
     }
 
     @Override
-    @PutMapping
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Atualiza as informações do carro no estacionamento"),
+    		@ApiResponse(responseCode = "404", description = "Não encontrado"),
+    		@ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
+    		})
+    @PutMapping(produces = "application/json")
+    @Operation(summary = "Atualiza as informações do estacionamento")
     public ResponseEntity<?> put(@RequestBody Estacionamento obj) {
         if(service.update(obj)) {
             return ResponseEntity.ok(obj);
@@ -58,6 +86,7 @@ public class EstacionamentoController implements ControllerInterface<Estacioname
 
     @Override
     @DeleteMapping(value = "/{id}")
+    @Operation(summary = "Apaga um carro do estacionamento")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         if(service.delete(id)) {
             return ResponseEntity.ok().build();
@@ -65,7 +94,13 @@ public class EstacionamentoController implements ControllerInterface<Estacioname
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
     
-    @PutMapping(value = "/saida/{id}")
+    @ApiResponses(value = {
+    		@ApiResponse(responseCode = "200", description = "Retira um carro do estacionamento"),
+    		@ApiResponse(responseCode = "404", description = "Não encontrado"),
+    		@ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
+    		})
+    @PutMapping(value = "/saida/{id}", produces = "application/json")
+    @Operation(summary = "Retira um carro do estacionamento, retorna a hora da saida e calcula o preço")
     public ResponseEntity<Estacionamento> putSaida(@PathVariable Long id) {
         service.saidaEstacionamento(id);
         return ResponseEntity.ok().body(service.findById(id));
