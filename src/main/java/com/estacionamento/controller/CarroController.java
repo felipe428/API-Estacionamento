@@ -64,5 +64,11 @@ public class CarroController implements ControllerInterface<Carro>{
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+    
+    @PutMapping(value = "/saida/{id}")
+    public ResponseEntity<Carro> putSaida(@PathVariable Long id) {
+        service.saidaCarro(id);
+        return ResponseEntity.ok().body(service.findById(id));
+    }
 
 }

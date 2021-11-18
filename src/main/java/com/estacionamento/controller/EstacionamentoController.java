@@ -93,17 +93,5 @@ public class EstacionamentoController implements ControllerInterface<Estacioname
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-    
-    @ApiResponses(value = {
-    		@ApiResponse(responseCode = "200", description = "Retira um carro do estacionamento"),
-    		@ApiResponse(responseCode = "404", description = "Não encontrado"),
-    		@ApiResponse(responseCode = "500", description = "Foi gerada uma exceção"),
-    		})
-    @PutMapping(value = "/saida/{id}", produces = "application/json")
-    @Operation(summary = "Retira um carro do estacionamento, retorna a hora da saida e calcula o preço")
-    public ResponseEntity<Estacionamento> putSaida(@PathVariable Long id) {
-        service.saidaEstacionamento(id);
-        return ResponseEntity.ok().body(service.findById(id));
-    }
 
 }
