@@ -5,8 +5,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.estacionamento.model.TipoPerfil;
-import com.estacionamento.service.UsuarioService;
+//import com.estacionamento.model.TipoPerfil;
+//import com.estacionamento.service.UsuarioService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,18 +19,18 @@ public class JWTUtil {
 	@Value("${jwt.expiration}")
 	private Long expiration;
 
-	public boolean authorized(Long id) {
-		UserDetailsImpl user = UsuarioService.authenticated();
-		if (user == null || (!user.hasRole(TipoPerfil.ADMIN) && !id.equals(user.getId()))) {
-			return false;
-		}
-		return true;
-	}
-
 	public String generateToken(String username) {
 		return Jwts.builder().setSubject(username).setExpiration(new Date(System.currentTimeMillis() + expiration))
 				.signWith(SignatureAlgorithm.HS512, secret.getBytes()).compact();
 	}
+	
+	//public boolean authorized(Long id) {
+	//	UserDetailsImpl user = UsuarioService.authenticated();
+	//	if (user == null || (!user.hasRole(TipoPerfil.ADMIN) && !id.equals(user.getId()))) {
+	//		return false;
+	//	}
+	//	return true;
+	//}
 
 	public boolean tokenValido(String token) {
 		Claims claims = getClaims(token);

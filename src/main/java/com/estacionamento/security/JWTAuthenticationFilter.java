@@ -55,16 +55,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		response.addHeader("Authentication", "Bearer " + token);
 		response.addHeader("access-control-expose-headers", "Authorization");
 		Usuario cli = cliRepo.findByLogin(username);
+		response.setContentType("application/json");
 		response.getWriter().append(jsonAuth(token, cli));
 	}
 
 	private String jsonAuth(String token, Usuario cliente) {
-		 return "{\"token\": \"" + token + "\"" + ", " +
-		 "\"username\": \"" + cliente.getNome() + ", " +
+		 return "{\"token\": \"" + token + "\", " + "\"username\": \"" + cliente.getNome() + "\", " +
 		 "\"profile\": " + cliente.getPerfis().stream()
 		 .map(x -> "\"" + x + "\"")
 		.collect(Collectors.toList()) + "}";
-		}
+	}
 	
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,

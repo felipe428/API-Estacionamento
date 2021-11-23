@@ -25,6 +25,14 @@ import com.estacionamento.security.JWTUtil;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+	private JWTUtil jwtUtil;
+	@Autowired
+	private UserDetailsService userDetailsService;
+	@Autowired
+	private UsuarioRepository cliRepo;
+
 	private static final String[] PUBLIC_MATCHERS = { "/v3/api-docs/**", "/swagger-ui/**", 
 			"/swagger-ui.html/**", "/documentacao/**", "/carros/**", "/clientes/**", 
 			"/estacionamento/**", "/usuarios/**" };
@@ -38,24 +46,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			"/swagger-ui.html/**", "/documentacao/**", "/carros/**", "/clientes/**", 
 			"/estacionamento/**", "/usuarios/**" };
 	
-	@Autowired
-	private JWTUtil jwtUtil;
-	@Autowired
-	private UserDetailsService userDetailsService;
-	@Autowired
-	private UsuarioRepository cliRepo;
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil, cliRepo));
 		http.cors().and().csrf().disable();
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil, cliRepo));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS).permitAll()
 				.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
 				.antMatchers(HttpMethod.PUT, PUBLIC_MATCHERS_PUT).permitAll()
 				.antMatchers(HttpMethod.DELETE, PUBLIC_MATCHERS_DELETE).permitAll()
 				.anyRequest().authenticated();
 		//http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 
 	}
 
