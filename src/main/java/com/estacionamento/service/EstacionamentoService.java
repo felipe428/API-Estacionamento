@@ -21,7 +21,7 @@ public class EstacionamentoService implements ServiceInterface<Estacionamento>{
 	@Override
 	public Estacionamento create(Estacionamento obj) {
 		obj.setHoraEntrada(LocalTime.now(ZoneId.of("America/Sao_Paulo")));
-		obj.setDataEntrada(LocalDate.now());
+		obj.setDataEntrada(LocalDate.now((ZoneId.of("America/Sao_Paulo"))));
 		repository.save(obj);
 		return obj;
 	}
@@ -59,7 +59,7 @@ public class EstacionamentoService implements ServiceInterface<Estacionamento>{
 		if(repository.existsById(id)) {
 			Estacionamento obj = findById(id);
 			obj.setHoraSaida(LocalTime.now(ZoneId.of("America/Sao_Paulo")));
-			obj.setDataSaida(LocalDate.now());
+			obj.setDataSaida(LocalDate.now((ZoneId.of("America/Sao_Paulo"))));
 			Integer valor = obj.getHoraSaida().getMinute() - obj.getHoraEntrada().getMinute();
 			System.out.println(valor);
 			repository.save(obj);
