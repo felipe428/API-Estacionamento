@@ -2,6 +2,7 @@ package com.estacionamento.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class EstacionamentoService implements ServiceInterface<Estacionamento>{
 	
 	@Override
 	public Estacionamento create(Estacionamento obj) {
-		obj.setHoraEntrada(LocalTime.now());
+		obj.setHoraEntrada(LocalTime.now(ZoneId.of("America/Sao_Paulo")));
 		obj.setDataEntrada(LocalDate.now());
 		repository.save(obj);
 		return obj;
@@ -57,7 +58,7 @@ public class EstacionamentoService implements ServiceInterface<Estacionamento>{
 	public Estacionamento saidaEstacionamento(Long id) {
 		if(repository.existsById(id)) {
 			Estacionamento obj = findById(id);
-			obj.setHoraSaida(LocalTime.now());
+			obj.setHoraSaida(LocalTime.now(ZoneId.of("America/Sao_Paulo")));
 			obj.setDataSaida(LocalDate.now());
 			Integer valor = obj.getHoraSaida().getMinute() - obj.getHoraEntrada().getMinute();
 			System.out.println(valor);
