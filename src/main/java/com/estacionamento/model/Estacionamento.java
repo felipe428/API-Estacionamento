@@ -18,7 +18,7 @@ public class Estacionamento extends AbstractEntity {
 	
 	@ManyToOne
 	private Carro carro;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
 	private LocalTime horaEntrada;
 	

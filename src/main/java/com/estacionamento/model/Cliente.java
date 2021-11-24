@@ -15,7 +15,7 @@ public class Cliente extends AbstractEntity {
 	
 	@Column(length = 11)
 	private String cpf;
-	
+
 	private String telefone;
 
 	public String getNome() {
