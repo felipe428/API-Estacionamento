@@ -59,6 +59,7 @@ public class UsuarioController implements ControllerInterface<Usuario>{
     }
 
     @Override
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         if(service.delete(id)) {
